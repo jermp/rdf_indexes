@@ -1,0 +1,6 @@
+[submodule "external/MaskedVByte"]
+	path = external/MaskedVByte
+	url = https://github.com/lemire/MaskedVByte.git
+[submodule "external/essentials"]
+	path = external/essentials
+	url = https://github.com/jermp/essentials.git

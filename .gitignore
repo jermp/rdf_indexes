@@ -1,0 +1,9 @@
+**/.DS_Store
+
+build/
+
+# CMake junk
+CMakeCache.txt
+CMakeFiles/
+*.cmake
+Makefile
