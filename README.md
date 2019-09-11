@@ -10,13 +10,14 @@ This guide is meant to provide a brief overview of the library and to illustrate
 * [Preparing the data for inedxing](#preparing-the-data-for-indexing)
 * [Building an index](#building-an-index)
 * [Querying an index](#querying-an-index)
+* [Statistics](#statistics)
 * [Testing](#testing)
 * [Extending the software](#extending-the-software)
 * [Authors](#authors)
 * [References](#references)
 
-Compiling the code
-------------------
+1. Compiling the code
+--------------------
 
 The code is tested on Linux with `gcc` 7.3.0 and on Mac 10.14 with `clang` 10.0.0.
 To build the code, [`CMake`](https://cmake.org/) and [`Boost`](https://www.boost.org) are required.
@@ -49,7 +50,7 @@ For a testing environment, use the following instead:
     
 Unless otherwise specified, for the rest of this guide we assume that we type the terminal commands of the following examples from the created directory `build`.
 
-Input data format
+2. Input data format
 -----------------
 
 The library works exclusively with integer triples,
@@ -92,7 +93,7 @@ can be created automatically from a given
 RDF dataset in standard N-Triples (`.nt`) format.
 (See also [https://www.w3.org/TR/n-triples](https://www.w3.org/TR/n-triples).)
 
-Preparing the data for indexing
+3. Preparing the data for indexing
 -------------------------------
 
 The folder `scripts` contains all the python scripts needed to prepare the datasets for indexing.
@@ -133,16 +134,95 @@ from within the `scripts` folder.
 
 	This script will create the file `wordnet31.mapped.sorted.stats`.
 
-
-Building the index
+4. Building an index
 ------------------
 
+With all the data prepared for indexing as explained in
+[Section 3](#preparing-the-data-for-indexing),
+building an index is as easy as:
 
-Querying the index
+	./build <type> <collection_basename> [-o output_filename]
+	
+For example, the command:
+
+	./build pef_3t ../test_data/wordnet31.mapped.sorted -o wordnet31.pef_3t.bin
+	
+will build a 3T index (see Section 3.1 of [1]), compressed
+with partitioned Elias-Fano (PEF), that is serialized to
+the binary file `wordnet31.pef_3t.bin`.
+
+See also the file `include/types.hpp` for all other index types.
+At the moment we support the following types.
+ 					`compact_3t`
+                `ef_3t`
+                `vb_3t`
+                `pef_3t`
+                `pef_r_3t`
+                `pef_2to`
+                `pef_2tp`
+
+5. Querying an index
 ------------------
+A triple selection pattern is just an ordinary integer triple
+with *k* wildcard symbols, for 0 ≤ *k* ≤ 3.
+In the library, a wildcard is represented by the integer -1.
+For example, the query pattern
+	
+	13 549 -1
+	
+asks for all triples where subject = 13 and predicate = 549.
+Similary
 
+	-1 -1 286
+	
+asks for all triples having object = 286.
 
-Testing
+If you do not have a querylog with some triple selection patterns
+of this form, just sample randomly the input data with (use `gshuf` instead of `shuf` on Mac OSX)
+
+	shuf -n 5000 ../../test_data/wordnet31.mapped.unsorted > ../../test_data/wordnet31.mapped.unsorted.queries.5000
+
+that will create a querylog with 5000 triples selected at random.
+
+Then, the executable `./queries` can be used to query an index, specifying a querylog, the number and position of the wildcards:
+
+	./queries <type> <perm> <index_filename> [-q <query_filename> -n <num_queries> -w <num_wildcards>]
+
+The arguments `<perm>` and `-w <num_wildcards>` are used to specify the triple selection patterns.
+`<perm>` is an integer 1..3 indicating the S-P-O permutation where
+`<num_wildcards>` symbols are set to wildcards (starting from the right).
+We use the convention that `perm = 1` specifies SPO, `perm = 2` specifies POS and `perm = 3` specifies OSP.
+
+Therefore we have:
+
+- `perm = 1` and `-w 0` <=> SPO
+- `perm = 1` and `-w 1` <=> SP?
+- `perm = 1` and `-w 2` <=> S??
+- `perm = 2` and `-w 1` <=> ?PO
+- `perm = 2` and `-w 2` <=> ?P?
+- `perm = 3` and `-w 1` <=> S?O
+- `perm = 3` and `-w 2` <=> ??O
+- any `perm` and `-w 3` <=> ???
+
+For example
+
+	./queries pef_3t 1 wordnet31.pef_3t.bin -q ../test_data/wordnet31.mapped.unsorted.queries.5000 -n 5000 -w 1
+
+will execute 5000 SP? queries.
+
+6. Statistics
+----------
+
+The executable `./statistics` will print some useful statistics
+about the nodes of the tries and their space occupancy:
+
+	./statistics <type> <index_filename>
+	
+For example
+
+	./statistics pef_2tp wordnet31.pef_2tp.bin
+	
+7. Testing
 -------
 
 Run the script `test/check_everything.py` from within the `./build`
@@ -153,7 +233,9 @@ directory to execute an exhaustive testing of every type of index.
 This script will check every triple selection pattern
 for all the different types of indexes.
 
-Extending the software
+See also the directory `./test` for further testing executables.
+
+8. Extending the software
 ----------------------
 
 The library is a flexible template library, allowing *any* encoder to be used on the nodes of the tries.
@@ -187,12 +269,12 @@ In order to use your custom encoder for a sequence of integers, the correspondin
 
 	
 
-Authors
+9. Authors
 -------
 * [Giulio Ermanno Pibiri](http://pages.di.unipi.it/pibiri/), <giulio.ermanno.pibiri@isti.cnr.it>
 
 
-References
+10. References
 -------
 * [1] Raffaele Perego, Giulio Ermanno Pibiri and Rossano Venturini. *Compressed Indexes for Fast Search of Semantic Data*. 2019. arXiv preprint. https://arxiv.org/abs/1904.07619
 * [2] M. A. Martínez-Prieto, M. A. Gallego, and J. D. Fernández. *Exchange and consumption of huge rdf data* in Extended Semantic

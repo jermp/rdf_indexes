@@ -7,6 +7,16 @@
 
 using namespace rdf;
 
+#define N 10000
+
+uint32_t num_runs(uint32_t runs, uint32_t n) {
+    uint32_t r = 1;
+    if (n * runs < N) {
+        r = N / n;
+    }
+    return r;
+}
+
 template <typename Index>
 void queries(char const* binary_filename, char const* query_filename, int perm,
              uint32_t runs, uint64_t num_queries, uint64_t num_wildcards,
@@ -14,25 +24,28 @@ void queries(char const* binary_filename, char const* query_filename, int perm,
     Index index;
     essentials::load(index, binary_filename);
     // essentials::print_size(index);
-    uint64_t num_triplets = 0;
+
     essentials::timer_type t;
+    uint64_t num_triples = 0;
+    double elapsed = 0.0;
 
     if (all) {
         util::logger("returning all triplets");
         num_queries = 1;
 
         for (uint64_t run = 0; run != runs; ++run) {
-            num_triplets = 0;
+            num_triples = 0;
             auto query_it = index.select_all();
             t.start();
             while (query_it.has_next()) {
                 auto t = *query_it;
                 essentials::do_not_optimize_away(t.first);
-                ++num_triplets;
+                ++num_triples;
                 ++query_it;
             }
             t.stop();
         }
+        elapsed = t.average();
 
     } else {
         util::logger("loading queries");
@@ -48,21 +61,21 @@ void queries(char const* binary_filename, char const* query_filename, int perm,
 
                 auto q = *input_it;
 
-                if (perm == 0) {
+                if (perm == permutation_type::spo) {
                     if (num_wildcards == 1) {
                         q.third = global::wildcard_symbol;
                     } else if (num_wildcards == 2) {
                         q.second = global::wildcard_symbol;
                         q.third = global::wildcard_symbol;
                     }
-                } else if (perm == 1) {
+                } else if (perm == permutation_type::pos) {
                     if (num_wildcards == 1) {
                         q.first = global::wildcard_symbol;
                     } else if (num_wildcards == 2) {
                         q.first = global::wildcard_symbol;
                         q.third = global::wildcard_symbol;
                     }
-                } else if (perm == 2) {
+                } else if (perm == permutation_type::osp) {
                     if (num_wildcards == 1) {
                         q.second = global::wildcard_symbol;
                     } else if (num_wildcards == 2) {
@@ -84,39 +97,68 @@ void queries(char const* binary_filename, char const* query_filename, int perm,
 
         if (num_wildcards == 0) {
             for (uint64_t run = 0; run != runs; ++run) {
-                num_triplets = num_queries;
+                num_triples = num_queries;
                 t.start();
                 for (auto query : queries) {
                     essentials::do_not_optimize_away(index.is_member(query));
                 }
                 t.stop();
             }
+            elapsed = t.average();
         } else {
-            for (uint64_t run = 0; run != runs; ++run) {
-                num_triplets = 0;
-                t.start();
-                for (auto query : queries) {
+            // for (uint64_t run = 0; run != runs; ++run) {
+            //     num_triples = 0;
+            //     t.start();
+            //     for (auto query : queries) {
+            //         auto query_it = index.select(query);
+            //         while (query_it.has_next()) {
+            //             auto t = *query_it;
+            //             essentials::do_not_optimize_away(t.first);
+            //             ++num_triples;
+            //             ++query_it;
+            //         }
+            //     }
+            //     t.stop();
+            // }
+
+            for (auto query : queries) {
+                uint64_t n = 0;
+                {
                     auto query_it = index.select(query);
                     while (query_it.has_next()) {
                         auto t = *query_it;
                         essentials::do_not_optimize_away(t.first);
-                        ++num_triplets;
+                        ++n;
+                        ++query_it;
+                    }
+                }
+
+                uint32_t r = num_runs(runs, n);
+
+                t.start();
+                for (uint32_t run = 0; run != r; ++run) {
+                    auto query_it = index.select(query);
+                    while (query_it.has_next()) {
+                        auto t = *query_it;
+                        essentials::do_not_optimize_away(t.first);
                         ++query_it;
                     }
                 }
                 t.stop();
+                double avg_per_query = t.elapsed() / r;
+                t.reset();
+                elapsed += avg_per_query;
+                num_triples += n;
             }
         }
     }
 
-    t.discard_min_max();
-    double avg = t.average();
-    std::cout << "\t# returned triplets: " << num_triplets << "\n";
-    std::cout << "\tMean per run: "
-              << avg / essentials::duration_type::period::ratio::den
-              << " [sec]\n";
-    std::cout << "\tMean per query: " << avg / num_queries << " [musec]\n";
-    std::cout << "\tMean per triplet: " << avg / num_triplets * 1000 << " [ns]";
+    double musecs_per_query = elapsed / num_queries;
+    double nanosecs_per_triplet = elapsed / num_triples * 1000;
+
+    std::cout << "\tReturned triples: " << num_triples << "\n";
+    std::cout << "\tMean per query: " << musecs_per_query << " [musec]\n ";
+    std::cout << "\tMean per triple: " << nanosecs_per_triplet << " [ns]";
     std::cout << std::endl;
 }
 
