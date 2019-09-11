@@ -5,18 +5,18 @@ This is the C++ library used for the experiments in the paper [*Compressed Index
 
 This guide is meant to provide a brief overview of the library and to illustrate its functionalities through some examples.
 ##### Table of contents
-* [Compiling the code](#compiling-the-code)
-* [Input data format](#input-data-format)
-* [Preparing the data for inedxing](#preparing-the-data-for-indexing)
-* [Building an index](#building-an-index)
-* [Querying an index](#querying-an-index)
-* [Statistics](#statistics)
-* [Testing](#testing)
-* [Extending the software](#extending-the-software)
-* [Authors](#authors)
-* [References](#references)
+1. [Compiling the code](#compiling)
+- [Input data format](#input)
+- [Preparing the data for inedxing](#preparing)
+- [Building an index](#building)
+- [Querying an index](#querying)
+- [Statistics](#statistics)
+- [Testing](#testing)
+- [Extending the software](#extending)
+- [Authors](#authors)
+- [References](#references)
 
-1. Compiling the code
+1. Compiling the code <a name="compiling"></a>
 --------------------
 
 The code is tested on Linux with `gcc` 7.3.0 and on Mac 10.14 with `clang` 10.0.0.
@@ -50,7 +50,7 @@ For a testing environment, use the following instead:
     
 Unless otherwise specified, for the rest of this guide we assume that we type the terminal commands of the following examples from the created directory `build`.
 
-2. Input data format
+2. Input data format <a name="input"></a>
 -----------------
 
 The library works exclusively with integer triples,
@@ -93,7 +93,7 @@ can be created automatically from a given
 RDF dataset in standard N-Triples (`.nt`) format.
 (See also [https://www.w3.org/TR/n-triples](https://www.w3.org/TR/n-triples).)
 
-3. Preparing the data for indexing
+3. Preparing the data for indexing <a name="preparing"></a>
 -------------------------------
 
 The folder `scripts` contains all the python scripts needed to prepare the datasets for indexing.
@@ -134,11 +134,11 @@ from within the `scripts` folder.
 
 	This script will create the file `wordnet31.mapped.sorted.stats`.
 
-4. Building an index
+4. Building an index <a name="building"></a>
 ------------------
 
 With all the data prepared for indexing as explained in
-[Section 3](#preparing-the-data-for-indexing),
+[Section 3](#preparing),
 building an index is as easy as:
 
 	./build <type> <collection_basename> [-o output_filename]
@@ -161,7 +161,7 @@ At the moment we support the following types.
                 `pef_2to`
                 `pef_2tp`
 
-5. Querying an index
+5. Querying an index <a name="querying"></a>
 ------------------
 A triple selection pattern is just an ordinary integer triple
 with *k* wildcard symbols, for 0 ≤ *k* ≤ 3.
@@ -210,7 +210,7 @@ For example
 
 will execute 5000 SP? queries.
 
-6. Statistics
+6. Statistics <a name="statistics"></a>
 ----------
 
 The executable `./statistics` will print some useful statistics
@@ -222,7 +222,7 @@ For example
 
 	./statistics pef_2tp wordnet31.pef_2tp.bin
 	
-7. Testing
+7. Testing <a name="testing"></a>
 -------
 
 Run the script `test/check_everything.py` from within the `./build`
@@ -235,7 +235,7 @@ for all the different types of indexes.
 
 See also the directory `./test` for further testing executables.
 
-8. Extending the software
+8. Extending the software <a name="extending"></a>
 ----------------------
 
 The library is a flexible template library, allowing *any* encoder to be used on the nodes of the tries.
@@ -269,12 +269,12 @@ In order to use your custom encoder for a sequence of integers, the correspondin
 
 	
 
-9. Authors
+9. Authors <a name="authors"></a>
 -------
 * [Giulio Ermanno Pibiri](http://pages.di.unipi.it/pibiri/), <giulio.ermanno.pibiri@isti.cnr.it>
 
 
-10. References
+10. References <a name="references"></a>
 -------
 * [1] Raffaele Perego, Giulio Ermanno Pibiri and Rossano Venturini. *Compressed Indexes for Fast Search of Semantic Data*. 2019. arXiv preprint. https://arxiv.org/abs/1904.07619
 * [2] M. A. Martínez-Prieto, M. A. Gallego, and J. D. Fernández. *Exchange and consumption of huge rdf data* in Extended Semantic
