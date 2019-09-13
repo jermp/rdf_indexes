@@ -81,7 +81,7 @@ named `RDF_dataset.stats`. Also this file is in
 plain format and contains 7 integers, one per line:
 
 1. total number of triples
-2. distinct ubjects
+2. distinct subjects
 3. distinct predicates
 4. distinct objects
 5. distinct S-P pairs
