@@ -110,27 +110,27 @@ from within the `scripts` folder.
 
 1. Extract the vocabularies.
 
-		python extract_vocabs.py ../test_data/wordnet31.nt.gz -S -P -O
+		$ python extract_vocabs.py ../test_data/wordnet31.nt.gz -S -P -O
 
 	This script will produce the following files: `wordnet31.subjects_vocab`, `wordnet31.predicates_vocab` and `wordnet31.objects_vocab`.
 
 2. Map the URIs to integer triples.
 
-		python map_dataset.py ../test_data/wordnet31.nt.gz
+		$ python map_dataset.py ../test_data/wordnet31.nt.gz
 	
 	This script will map the dataset to integer triples,
 	producing the file `wordnet31.mapped.unsorted`.
 
 3. Sort the file `wordnet31.mapped.unsorted` materializing the needed permutations.
 
-		python sort.py ../test_data/wordnet31.mapped.unsorted wordnet31
+		$ python sort.py ../test_data/wordnet31.mapped.unsorted wordnet31
 	
 	This script will produce the four permutations, one per file:
 	`wordnet31.mapped.sorted.spo`, `wordnet31.mapped.sorted.pos`, `wordnet31.mapped.sorted.osp` and `wordnet31.mapped.sorted.ops`.
 
 4. Build the file with the statistics.
 
-		python build_stats.py wordnet31.mapped.sorted
+		$ python build_stats.py wordnet31.mapped.sorted
 
 	This script will create the file `wordnet31.mapped.sorted.stats`.
 
@@ -141,11 +141,11 @@ With all the data prepared for indexing as explained in
 [Section 3](#preparing),
 building an index is as easy as:
 
-	./build <type> <collection_basename> [-o output_filename]
+	$ ./build <type> <collection_basename> [-o output_filename]
 	
 For example, the command:
 
-	./build pef_3t ../test_data/wordnet31.mapped.sorted -o wordnet31.pef_3t.bin
+	$ ./build pef_3t ../test_data/wordnet31.mapped.sorted -o wordnet31.pef_3t.bin
 	
 will build a 3T index (see Section 3.1 of [1]), compressed
 with partitioned Elias-Fano (PEF), that is serialized to
@@ -180,13 +180,13 @@ asks for all triples having object = 286.
 If you do not have a querylog with some triple selection patterns
 of this form, just sample randomly the input data with (use `gshuf` instead of `shuf` on Mac OSX)
 
-	shuf -n 5000 ../../test_data/wordnet31.mapped.unsorted > ../../test_data/wordnet31.mapped.unsorted.queries.5000
+	$ shuf -n 5000 ../../test_data/wordnet31.mapped.unsorted > ../../test_data/wordnet31.mapped.unsorted.queries.5000
 
 that will create a querylog with 5000 triples selected at random.
 
 Then, the executable `./queries` can be used to query an index, specifying a querylog, the number and position of the wildcards:
 
-	./queries <type> <perm> <index_filename> [-q <query_filename> -n <num_queries> -w <num_wildcards>]
+	$ ./queries <type> <perm> <index_filename> [-q <query_filename> -n <num_queries> -w <num_wildcards>]
 
 The arguments `<perm>` and `-w <num_wildcards>` are used to specify the triple selection patterns.
 `<perm>` is an integer 1..3 indicating the S-P-O permutation where
@@ -206,7 +206,7 @@ Therefore we have:
 
 For example
 
-	./queries pef_3t 1 wordnet31.pef_3t.bin -q ../test_data/wordnet31.mapped.unsorted.queries.5000 -n 5000 -w 1
+	$ ./queries pef_3t 1 wordnet31.pef_3t.bin -q ../test_data/wordnet31.mapped.unsorted.queries.5000 -n 5000 -w 1
 
 will execute 5000 SP? queries.
 
@@ -216,11 +216,11 @@ Statistics <a name="statistics"></a>
 The executable `./statistics` will print some useful statistics
 about the nodes of the tries and their space occupancy:
 
-	./statistics <type> <index_filename>
+	$ ./statistics <type> <index_filename>
 	
 For example
 
-	./statistics pef_2tp wordnet31.pef_2tp.bin
+	$ ./statistics pef_2tp wordnet31.pef_2tp.bin
 	
 Testing <a name="testing"></a>
 -------
@@ -228,7 +228,7 @@ Testing <a name="testing"></a>
 Run the script `test/check_everything.py` from within the `./build`
 directory to execute an exhaustive testing of every type of index.
 
-	python ../test/check_everything.py ../test_data/wordnet31.mapped.sorted . wordnet
+	$ python ../test/check_everything.py ../test_data/wordnet31.mapped.sorted . wordnet
 	
 This script will check every triple selection pattern
 for all the different types of indexes.
