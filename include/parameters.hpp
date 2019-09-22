@@ -8,10 +8,7 @@ namespace rdf {
 
 struct parameters {
     parameters()
-        : num_triplets(0)
-        , num_elements(6, 0)
-        , collection_basename(nullptr)
-        , associativity(1) {}
+        : num_triplets(0), num_elements(6, 0), collection_basename(nullptr) {}
 
     void load() {
         std::string filename = std::string(collection_basename) + ".stats";
@@ -89,6 +86,5 @@ struct parameters {
     // num_elements[5] = num. of distinct pairs (o,s)
     std::vector<uint64_t> num_elements;
     char const* collection_basename;
-    uint32_t associativity;
 };
 }  // namespace rdf
