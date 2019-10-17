@@ -6,8 +6,7 @@ namespace rdf {
 
 struct compact_vector {
     template <typename Data>
-    struct enumerator
-        : public std::iterator<std::input_iterator_tag, uint64_t> {
+    struct enumerator {
         enumerator() {}
 
         enumerator(Data const* data, uint64_t i = 0)
