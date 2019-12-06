@@ -74,7 +74,7 @@ def write_dictionary(dictionary, file, use_hashes):
         for key, value in sorted(dictionary.iteritems(), key = lambda kv: kv[1], reverse = True):
             file.write(key.encode('utf-8') + "\n")
 
-dictionary_filename_prefix = input_filename.split('.nt')[0]
+dictionary_filename_prefix = input_filename.split('.gz')[0]
 
 print("sorting and writing...")
 

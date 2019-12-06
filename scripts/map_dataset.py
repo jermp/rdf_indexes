@@ -30,7 +30,7 @@ def build_vocab(dictionary, filename):
 # 'input_filename'.predicates_vocab
 # 'input_filename'.objects_vocab
 # in the same folder as the one for the input file
-prefix_name = input_filename.split('.nt')[0]
+prefix_name = input_filename.split('.gz')[0]
 
 print("building vocabularies...")
 build_vocab(subjects, prefix_name + ".subjects_vocab")
@@ -88,4 +88,5 @@ with gzip.open(input_filename, 'rb') as f:
         if lines % 1000000 == 0:
             print "processed " + str(lines) + " lines"
 
+print "processed " + str(lines) + " lines"
 output_file.close()
