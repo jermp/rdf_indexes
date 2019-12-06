@@ -11,7 +11,7 @@ index_types = [
                 , "pef_3t"
                 , "pef_r_3t"
                 , "pef_2to"
-                , "pef_2tp"
+                ,"pef_2tp"
               ]
 
 executables = [

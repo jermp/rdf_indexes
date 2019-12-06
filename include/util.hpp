@@ -49,18 +49,17 @@ inline uint64_t scan_binary_search(S const& sequence, uint64_t id, uint64_t lo,
     while (lo <= hi) {
         if (hi - lo <= global::linear_scan_threshold) {
             auto it = sequence.at(lo);
-            for (uint64_t pos = lo; pos != hi; ++pos, ++it) {
-                if (*it == id) {
-                    return pos;
-                }
+            for (uint64_t pos = lo; pos <= hi; ++pos, ++it) {
+                if (*it == id) return pos;
             }
+            return global::not_found;
         }
 
         uint64_t pos = lo + ((hi - lo) >> 1);
         uint64_t val = sequence.access(pos);
-        if (val == id) {
-            return pos;
-        } else if (val > id) {
+        if (val == id) return pos;
+        if (val > id) {
+            assert(pos > 0);
             hi = pos - 1;
         } else {
             lo = pos + 1;

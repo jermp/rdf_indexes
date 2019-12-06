@@ -72,8 +72,7 @@ struct ef_sequence {
                 m_chunks_avail = m_ef->num_ones();
             }
 
-            if (!m_ef->num_ones())
-                return;
+            if (!m_ef->num_ones()) return;
             uint64_t begin =
                 m_ef->m_high_bits_d1.select(m_ef->m_high_bits, m_pos);
             m_high_enum = bit_vector::unary_iterator(m_ef->m_high_bits, begin);
@@ -82,9 +81,7 @@ struct ef_sequence {
         }
 
         uint64_t next() {
-            if (m_pos == m_ef->size()) {
-                return m_val;
-            }
+            if (m_pos == m_ef->size()) return m_val;
 
             if (!m_chunks_avail--) {
                 m_low_buf = m_ef->m_low_bits.get_word64(m_pos * m_l);
@@ -98,8 +95,7 @@ struct ef_sequence {
             ++m_pos;
             m_low_buf >>= m_l;
 
-            m_high = m_high_enum.next();
-
+            if (m_pos != m_ef->size()) m_high = m_high_enum.next();
             return m_val;
         }
 
@@ -317,5 +313,6 @@ private:
         return x;
     }
 };
+
 }  // namespace ef
 }  // namespace rdf

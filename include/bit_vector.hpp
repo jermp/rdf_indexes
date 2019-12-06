@@ -313,7 +313,6 @@ struct bit_vector {
                 m_position += 64;
                 buf = m_data[m_position >> 6];
             }
-
             m_buf = buf & (buf - 1);  // clear LSB
             m_position = (m_position & ~uint64_t(63)) + pos_in_word;
             return m_position;

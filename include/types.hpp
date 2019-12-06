@@ -64,7 +64,6 @@ typedef index_3t<ef_t, ef_t, ef_t> ef_3t;
 // typedef index_3t<pef_t, pef_t, pef_t> pef_3t;
 typedef index_3t<pef_compact_t, pef_t, pef_t> pef_3t;
 
-// typedef index_2to<pef_t, pef_t> pef_2t;
 typedef index_2to<pef_compact_t, pef_t> pef_2to;
 typedef index_2tp<pef_compact_t, pef_t> pef_2tp;
 

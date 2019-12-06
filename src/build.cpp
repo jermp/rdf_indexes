@@ -23,7 +23,7 @@ void build(parameters const& params, char const* output_filename) {
     std::cout << bits_per_triplet << " [bpt]" << std::endl;
 
     if (output_filename) {
-        essentials::print_size(index);
+        // essentials::print_size(index);
         util::logger("saving data structure to disk...");
         essentials::save<Index>(index, output_filename);
         util::logger("DONE");

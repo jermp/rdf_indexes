@@ -53,6 +53,7 @@ template <typename Index>
 void check(parameters const& params, char const* index_filename) {
     Index index;
     essentials::load(index, index_filename);
+    assert(index.triplets() == params.num_triplets);
     check_permutation(index.spo(), permutation_type::spo, params);
     check_permutation(index.pos(), permutation_type::pos, params);
     check_permutation(index.osp(), permutation_type::osp, params);
@@ -62,6 +63,7 @@ void check(parameters const& params, char const* index_filename) {
 void check_2to(parameters const& params, char const* index_filename) {
     pef_2to index;
     essentials::load(index, index_filename);
+    assert(index.triplets() == params.num_triplets);
     check_permutation(index.spo(), permutation_type::spo, params);
     check_permutation(index.ops(), permutation_type::ops, params);
 }
@@ -70,6 +72,7 @@ void check_2to(parameters const& params, char const* index_filename) {
 void check_2tp(parameters const& params, char const* index_filename) {
     pef_2tp index;
     essentials::load(index, index_filename);
+    assert(index.triplets() == params.num_triplets);
     check_permutation(index.spo(), permutation_type::spo, params);
     check_permutation(index.pos(), permutation_type::pos, params);
 }

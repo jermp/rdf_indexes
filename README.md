@@ -106,6 +106,9 @@ the HDT [2] software at [http://www.rdfhdt.org/downloads](http://www.rdfhdt.org/
 To prepare the data, it is sufficient to follow the following steps
 from within the `scripts` folder.
 
+**NOTE** - The scripts require the python module `mmh3` that can be easily
+installed with `pip install mmh3`.
+
 1. Extract the vocabularies.
 
 		python extract_vocabs.py ../test_data/wordnet31.gz -S -P -O

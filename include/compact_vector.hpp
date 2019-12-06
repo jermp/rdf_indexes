@@ -285,7 +285,6 @@ struct compact_vector {
     uint64_t find(range const& r, uint64_t id) {
         assert(r.end > r.begin);
         assert(r.end <= size());
-
         return scan_binary_search(*this, id, r.begin, r.end - 1);
     }
 

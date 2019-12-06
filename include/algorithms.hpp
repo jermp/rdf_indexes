@@ -135,12 +135,9 @@ struct trie<Mapper, Levels>::iterator_so {
             m_val.third = *m_second;
             auto r = m_third.pointer();
             uint64_t pos = m_nodes->find(r, m_val.first);
-            if (pos != global::not_found) {
-                return true;
-            }
+            if (pos != global::not_found) return true;
             this->operator++();
         }
-
         return false;
     }
 

@@ -8,14 +8,8 @@ using namespace rdf;
 
 triplet prepare_query(triplet const& t, int perm, uint32_t num_wildcards) {
     assert(num_wildcards <= 3);
-
-    if (num_wildcards == 3) {
-        return triplet();
-    }
-
-    if (num_wildcards == 0) {
-        return t;
-    }
+    if (num_wildcards == 3) return triplet();
+    if (num_wildcards == 0) return t;
 
     triplet query;
 
@@ -23,14 +17,12 @@ triplet prepare_query(triplet const& t, int perm, uint32_t num_wildcards) {
     if (perm == permutation_type::ops) {
         query.first = t.third;
         query.third = t.first;
-
         if (num_wildcards == 1) {
             query.first = global::wildcard_symbol;
         } else if (num_wildcards == 2) {
             query.first = global::wildcard_symbol;
             query.second = global::wildcard_symbol;
         }
-
         return query;
     }
 
@@ -66,9 +58,7 @@ void check(parameters const& params, Permutation& permutation,
 
     uint64_t n = 0;
     uint64_t quantum = 10000000;
-    if (params.num_triplets < quantum) {
-        quantum /= 10;
-    }
+    if (params.num_triplets < quantum) quantum /= 10;
 
     if (num_wildcards == 0) {
         while (true) {
@@ -78,48 +68,33 @@ void check(parameters const& params, Permutation& permutation,
             if (triplet_id == global::not_found) {
                 std::cerr << expected << " not found." << std::endl;
             }
-
             ++n;
             if (n % quantum == 0) {
                 std::cout << "checked " << n << "/" << params.num_triplets
                           << " triplets" << std::endl;
             }
-
-            if (n == params.num_triplets) {
-                break;
-            }
+            if (n == params.num_triplets) break;
             ++input_it;
         }
-
     } else {
         while (true) {
             triplet expected = *input_it;
             triplet query = prepare_query(expected, perm, num_wildcards);
-
             auto query_it = num_wildcards == 3 ? permutation.select_all()
                                                : permutation.select(query);
-
             while (query_it.has_next()) {
                 triplet got = *query_it;
                 triplet expected = *input_it;
-
-                if (!util::check(n, params.num_triplets, got, expected)) {
-                    return;
-                }
-
+                if (!util::check(n, params.num_triplets, got, expected)) return;
                 ++n;
                 if (n % quantum == 0) {
                     std::cout << "checked " << n << "/" << params.num_triplets
                               << " triplets" << std::endl;
                 }
-
                 ++query_it;
                 ++input_it;
             }
-
-            if (n == params.num_triplets) {
-                break;
-            }
+            if (n == params.num_triplets) break;
         }
     }
 
