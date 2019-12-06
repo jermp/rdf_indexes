@@ -38,10 +38,6 @@ if(UNIX)
 
 endif()
 
-find_package(Boost COMPONENTS system REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
-
 include_directories(${RDF_SOURCE_DIR}/include)
 
 add_subdirectory(external)

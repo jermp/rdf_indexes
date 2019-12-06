@@ -25,15 +25,22 @@ int main(int argc, char** argv) {
     std::string type(argv[1]);
     char const* index_filename = argv[2];
 
-    if (false) {
-#define LOOP_BODY(R, DATA, T)                 \
-    }                                         \
-    else if (type == BOOST_PP_STRINGIZE(T)) { \
-        statistics<T>(index_filename);        \
-        /**/
-
-        BOOST_PP_SEQ_FOR_EACH(LOOP_BODY, , INDEXES);
-#undef LOOP_BODY
+    if (type == "compact_3t") {
+        statistics<compact_3t>(index_filename);
+    } else if (type == "ef_3t") {
+        statistics<ef_3t>(index_filename);
+    } else if (type == "pef_3t") {
+        statistics<pef_3t>(index_filename);
+    } else if (type == "vb_3t") {
+        statistics<vb_3t>(index_filename);
+    } else if (type == "pef_r_3t") {
+        statistics<pef_r_3t>(index_filename);
+    } else if (type == "pef_2to") {
+        statistics<pef_2to>(index_filename);
+    } else if (type == "pef_2tp") {
+        statistics<pef_2tp>(index_filename);
+    } else if (type == "vb_2tp") {
+        statistics<vb_2tp>(index_filename);
     } else {
         building_util::unknown_type(type);
     }

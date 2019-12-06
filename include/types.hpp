@@ -6,19 +6,13 @@
 #include "index_2to.hpp"
 #include "index_2tp.hpp"
 #include "mappers.hpp"
-
 #include "compact_vector.hpp"
 #include "block_sequence.hpp"
 #include "ef/ef_sequence.hpp"
 #include "pef/pef_sequence.hpp"
 #include "vb/vb.hpp"
 #include "algorithms.hpp"
-
 #include "util_types.hpp"
-
-#include <boost/preprocessor/seq/for_each.hpp>
-#include <boost/preprocessor/stringize.hpp>
-#include <boost/preprocessor/cat.hpp>
 
 namespace rdf {
 
@@ -89,7 +83,4 @@ typedef trie<identity_mapper, vb_levels> vb_t;
 typedef index_3t<vb_t, vb_t, vb_t> vb_3t;
 typedef index_2tp<pef_compact_t, vb_t> vb_2tp;
 
-#define PERMUTED (compact_3t)(ef_3t)(pef_3t)(vb_3t)(pef_r_3t)
-#define INDEXES \
-    (compact_3t)(ef_3t)(pef_3t)(vb_3t)(pef_r_3t)(pef_2to)(pef_2tp)(vb_2tp)
 }  // namespace rdf

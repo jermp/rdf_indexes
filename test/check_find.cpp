@@ -115,15 +115,16 @@ int main(int argc, char** argv) {
         return 0;
     }
 
-    if (false) {
-#define LOOP_BODY(R, DATA, T)                 \
-    }                                         \
-    else if (type == BOOST_PP_STRINGIZE(T)) { \
-        check<T>(index_filename);             \
-        /**/
-
-        BOOST_PP_SEQ_FOR_EACH(LOOP_BODY, , PERMUTED);
-#undef LOOP_BODY
+    if (type == "compact_3t") {
+        check<compact_3t>(index_filename);
+    } else if (type == "ef_3t") {
+        check<ef_3t>(index_filename);
+    } else if (type == "pef_3t") {
+        check<pef_3t>(index_filename);
+    } else if (type == "vb_3t") {
+        check<vb_3t>(index_filename);
+    } else if (type == "pef_r_3t") {
+        check<pef_r_3t>(index_filename);
     } else {
         building_util::unknown_type(type);
     }

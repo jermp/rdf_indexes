@@ -53,15 +53,25 @@ int main(int argc, char** argv) {
         }
     }
 
-    if (false) {
-#define LOOP_BODY(R, DATA, T)              \
-    }                                      \
-    else if (type == STRINGIZE(T)) {       \
-        build<T>(params, output_filename); \
-        /**/
+    // Yes...many ifs are ugly but this avoids the dependency from
+    // BOOST_PP_SEQ_FOR_EACH.
 
-        BOOST_PP_SEQ_FOR_EACH(LOOP_BODY, , INDEXES);
-#undef LOOP_BODY
+    if (type == "compact_3t") {
+        build<compact_3t>(params, output_filename);
+    } else if (type == "ef_3t") {
+        build<ef_3t>(params, output_filename);
+    } else if (type == "pef_3t") {
+        build<pef_3t>(params, output_filename);
+    } else if (type == "vb_3t") {
+        build<vb_3t>(params, output_filename);
+    } else if (type == "pef_r_3t") {
+        build<pef_r_3t>(params, output_filename);
+    } else if (type == "pef_2to") {
+        build<pef_2to>(params, output_filename);
+    } else if (type == "pef_2tp") {
+        build<pef_2tp>(params, output_filename);
+    } else if (type == "vb_2tp") {
+        build<vb_2tp>(params, output_filename);
     } else {
         building_util::unknown_type(type);
     }

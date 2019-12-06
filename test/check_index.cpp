@@ -14,9 +14,7 @@ void check_permutation(Trie& permutation, int perm, parameters const& params) {
 
     util::logger("checking permutation " + suffix(perm));
     uint64_t quantum = 10000000;
-    if (params.num_triplets < quantum) {
-        quantum /= 10;
-    }
+    if (params.num_triplets < quantum) quantum /= 10;
 
     auto begin = permutation.select_all();
 
@@ -24,21 +22,13 @@ void check_permutation(Trie& permutation, int perm, parameters const& params) {
     while (true) {
         triplet expected = *input_it;
         triplet got = *begin;
-
-        if (!util::check(n, params.num_triplets, got, expected)) {
-            return;
-        }
-
+        if (!util::check(n, params.num_triplets, got, expected)) return;
         ++n;
         if (n % quantum == 0) {
             std::cout << "checked " << n << "/" << params.num_triplets
                       << " triplets" << std::endl;
         }
-
-        if (n == params.num_triplets) {
-            break;
-        }
-
+        if (n == params.num_triplets) break;
         ++begin;
         ++input_it;
     }
@@ -101,15 +91,16 @@ int main(int argc, char** argv) {
         return 0;
     }
 
-    if (false) {
-#define LOOP_BODY(R, DATA, T)                 \
-    }                                         \
-    else if (type == BOOST_PP_STRINGIZE(T)) { \
-        check<T>(params, index_filename);     \
-        /**/
-
-        BOOST_PP_SEQ_FOR_EACH(LOOP_BODY, , PERMUTED);
-#undef LOOP_BODY
+    if (type == "compact_3t") {
+        check<compact_3t>(params, index_filename);
+    } else if (type == "ef_3t") {
+        check<ef_3t>(params, index_filename);
+    } else if (type == "pef_3t") {
+        check<pef_3t>(params, index_filename);
+    } else if (type == "vb_3t") {
+        check<vb_3t>(params, index_filename);
+    } else if (type == "pef_r_3t") {
+        check<pef_r_3t>(params, index_filename);
     } else {
         building_util::unknown_type(type);
     }

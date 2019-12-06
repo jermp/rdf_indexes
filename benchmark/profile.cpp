@@ -344,16 +344,21 @@ int main(int argc, char** argv) {
 
     json_lines stats;
 
-    if (false) {
-#define LOOP_BODY(R, DATA, T)                                                \
-    }                                                                        \
-    else if (type == BOOST_PP_STRINGIZE(T)) {                                \
-        queries<T>(index_filename, query_filename, runs, num_queries, stats, \
-                   type);                                                    \
-        /**/
-
-        BOOST_PP_SEQ_FOR_EACH(LOOP_BODY, , PERMUTED);
-#undef LOOP_BODY
+    if (type == "compact_3t") {
+        queries<compact_3t>(index_filename, query_filename, runs, num_queries,
+                            stats, type);
+    } else if (type == "ef_3t") {
+        queries<ef_3t>(index_filename, query_filename, runs, num_queries, stats,
+                       type);
+    } else if (type == "pef_3t") {
+        queries<pef_3t>(index_filename, query_filename, runs, num_queries,
+                        stats, type);
+    } else if (type == "vb_3t") {
+        queries<vb_3t>(index_filename, query_filename, runs, num_queries, stats,
+                       type);
+    } else if (type == "pef_r_3t") {
+        queries<pef_r_3t>(index_filename, query_filename, runs, num_queries,
+                          stats, type);
     } else {
         building_util::unknown_type(type);
     }

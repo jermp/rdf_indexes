@@ -195,16 +195,30 @@ int main(int argc, char** argv) {
 
     static const uint32_t runs = 5;
 
-    if (false) {
-#define LOOP_BODY(R, DATA, T)                                               \
-    }                                                                       \
-    else if (type == BOOST_PP_STRINGIZE(T)) {                               \
-        queries<T>(index_filename, query_filename, perm, runs, num_queries, \
-                   num_wildcards, all);                                     \
-        /**/
-
-        BOOST_PP_SEQ_FOR_EACH(LOOP_BODY, , INDEXES);
-#undef LOOP_BODY
+    if (type == "compact_3t") {
+        queries<compact_3t>(index_filename, query_filename, perm, runs,
+                            num_queries, num_wildcards, all);
+    } else if (type == "ef_3t") {
+        queries<ef_3t>(index_filename, query_filename, perm, runs, num_queries,
+                       num_wildcards, all);
+    } else if (type == "pef_3t") {
+        queries<pef_3t>(index_filename, query_filename, perm, runs, num_queries,
+                        num_wildcards, all);
+    } else if (type == "vb_3t") {
+        queries<vb_3t>(index_filename, query_filename, perm, runs, num_queries,
+                       num_wildcards, all);
+    } else if (type == "pef_r_3t") {
+        queries<pef_r_3t>(index_filename, query_filename, perm, runs,
+                          num_queries, num_wildcards, all);
+    } else if (type == "pef_2to") {
+        queries<pef_2to>(index_filename, query_filename, perm, runs,
+                         num_queries, num_wildcards, all);
+    } else if (type == "pef_2tp") {
+        queries<pef_2tp>(index_filename, query_filename, perm, runs,
+                         num_queries, num_wildcards, all);
+    } else if (type == "vb_2tp") {
+        queries<vb_2tp>(index_filename, query_filename, perm, runs, num_queries,
+                        num_wildcards, all);
     } else {
         building_util::unknown_type(type);
     }
