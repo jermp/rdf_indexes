@@ -7,9 +7,8 @@
 
 using namespace rdf;
 
-#define N 10000
-
 uint32_t num_runs(uint32_t runs, uint32_t n) {
+    static const uint32_t N = 10000;
     uint32_t r = 1;
     if (n * runs < N) {
         r = N / n;

@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "../external/essentials/include/essentials.hpp"
 #include "util.hpp"
 #include "types.hpp"
 
@@ -10,10 +11,10 @@ void build(parameters const& params, char const* output_filename) {
     typename Index::builder builder(params);
     Index index;
     builder.build(index);
-    double giga = convert(index.bytes(), essentials::GB);
+    double giga = essentials::convert(index.bytes(), essentials::GB);
     if (giga < 0.1) {
-        std::cout << convert(index.bytes(), essentials::MB) << " [MB]"
-                  << std::endl;
+        std::cout << essentials::convert(index.bytes(), essentials::MB)
+                  << " [MB]" << std::endl;
     } else {
         std::cout << giga << " [GB]" << std::endl;
     }
