@@ -170,6 +170,7 @@ void unknown_type(std::string const& type) {
     std::cerr << "Error: unknown type "
               << "'" << type << "'" << std::endl;
 }
+
 }  // namespace building_util
 
 namespace util {

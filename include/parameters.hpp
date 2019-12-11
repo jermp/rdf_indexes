@@ -23,8 +23,8 @@ struct parameters {
     }
 
     uint64_t num_types(int perm, int level) const {
-        // specialization
-        if (perm == 4) {
+        // specialization ops
+        if (perm == permutation_type::ops) {
             if (level == level_type::first) {
                 return num_elements[2];
             } else if (level == level_type::second) {
@@ -34,16 +34,37 @@ struct parameters {
             }
         }
 
+        // specialization pso
+        if (perm == permutation_type::pso) {
+            if (level == level_type::first) {
+                return num_elements[1];
+            } else if (level == level_type::second) {
+                return num_elements[0];
+            } else {
+                return num_elements[2];
+            }
+        }
+
         return num_elements[(perm - 1 + level - 1) % 3];
     }
 
     uint64_t num_nodes(int perm, int level) const {
-        // specialization
-        if (perm == 4) {
+        // specialization ops
+        if (perm == permutation_type::ops) {
             if (level == level_type::first) {
                 return num_elements[2];
             } else if (level == level_type::second) {
                 return num_elements[4];
+            }
+            return num_triplets;
+        }
+
+        // specialization pso
+        if (perm == permutation_type::pso) {
+            if (level == level_type::first) {
+                return num_elements[1];
+            } else if (level == level_type::second) {
+                return num_elements[3];
             }
             return num_triplets;
         }
@@ -87,4 +108,5 @@ struct parameters {
     std::vector<uint64_t> num_elements;
     char const* collection_basename;
 };
+
 }  // namespace rdf
