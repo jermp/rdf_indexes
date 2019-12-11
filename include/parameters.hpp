@@ -13,6 +13,12 @@ struct parameters {
     void load() {
         std::string filename = std::string(collection_basename) + ".stats";
         std::ifstream input(filename.c_str(), std::ios_base::in);
+        if (!input.good()) {
+            throw std::runtime_error(
+                "Error in opening statistics file: expected file '" + filename +
+                "', but not found.");
+        }
+
         input >> num_triplets;
         for (int i = 0; i != 6; ++i) {
             input >> num_elements[i];
