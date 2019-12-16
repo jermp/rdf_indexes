@@ -20,7 +20,7 @@ Compiling the code <a name="compiling"></a>
 --------------------
 
 The code is tested on Linux with `gcc` 7.3.0, 8.3.0, 9.2.0 and on Mac 10.14 with `clang` 10.0.0.
-To build the code, [`CMake`](https://cmake.org/) and [`Boost`](https://www.boost.org) are required.
+[`CMake`](https://cmake.org/) is required to build the code.
 
 The code has few external dependencies (for benchmarking and serialization), so clone the repository with
 
