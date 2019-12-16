@@ -100,7 +100,8 @@ Assume we have an RDF dataset in standard N-Triples format,
 additionally compressed via gzip.
 For the following example, assume to work with the dataset provided in the folder `test_data`: `wordnet31.gz`.
 (This dataset has been downloaded from [http://www.rdfhdt.org/datasets](http://www.rdfhdt.org/datasets) and extracted using
-the HDT [2] software at [http://www.rdfhdt.org/downloads](http://www.rdfhdt.org/downloads).)
+the HDT [2] software at [http://www.rdfhdt.org/downloads](http://www.rdfhdt.org/downloads).
+You can also visit [http://wordnet-rdf.princeton.edu](http://wordnet-rdf.princeton.edu) for more information.)
 
 
 To prepare the data, it is sufficient to follow the following steps
