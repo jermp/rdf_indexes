@@ -7,22 +7,23 @@
 
 using namespace rdf;
 
-#define COMPRESS_AND_WRITE                                             \
-    T dict;                                                            \
-    dict.write(numbers.begin(), numbers.back() + 1, numbers.size());   \
-    double giga = essentials::convert(dict.bytes(), essentials::GB);   \
-    if (giga < 0.1) {                                                  \
-        std::cout << essentials::convert(dict.bytes(), essentials::MB) \
-                  << " [MB]" << std::endl;                             \
-    } else {                                                           \
-        std::cout << giga << " [GB]" << std::endl;                     \
-    }                                                                  \
-    double bits_per_value = (dict.bytes() * 8.0) / numbers.size();     \
-    std::cout << bits_per_value << " [bits per value]" << std::endl;   \
-    util::logger("saving data structure to disk...");                  \
-    essentials::saver visitor((filename + ".bin").c_str());            \
-    visitor.visit(dict_type);                                          \
-    visitor.visit(dict);                                               \
+#define COMPRESS_AND_WRITE                                                 \
+    T dict;                                                                \
+    dict.write(numbers.begin(), numbers.back() + 1, numbers.size());       \
+    size_t bytes = dict.bytes() + sizeof(dict_type);                       \
+    double giga = essentials::convert(bytes, essentials::GB);              \
+    if (giga < 0.1) {                                                      \
+        std::cout << essentials::convert(bytes, essentials::MB) << " [MB]" \
+                  << std::endl;                                            \
+    } else {                                                               \
+        std::cout << giga << " [GB]" << std::endl;                         \
+    }                                                                      \
+    double bits_per_value = (bytes * 8.0) / numbers.size();                \
+    std::cout << bits_per_value << " [bits per value]" << std::endl;       \
+    util::logger("saving data structure to disk...");                      \
+    essentials::saver visitor((filename + ".bin").c_str());                \
+    visitor.visit(dict_type);                                              \
+    visitor.visit(dict);                                                   \
     util::logger("DONE");
 
 template <typename T>
@@ -37,13 +38,9 @@ void build_numbers_dictionary(std::string const& collection_basename,
                 "Error in opening dictionary file: expected file '" + filename +
                 "', but not found.");
         }
-        while (input) {
-            uint64_t x = 0;
-            input >> x;
-            numbers.push_back(x);
-        }
+        uint64_t x = 0;
+        while (input >> x) numbers.push_back(x);
         input.close();
-
         std::cout << "read " << numbers.size() << " values" << std::endl;
         assert(std::is_sorted(numbers.begin(), numbers.end()));
     }
@@ -69,7 +66,7 @@ uint64_t parse_and_convert_to_uint64(std::string const& date) {
     substr = date.substr(previous, current - previous);
     uint64_t day = std::stoull(substr);
 
-    return year * 365 + month * 31 + day;
+    return (year * 10000 + month * 100 + day) - global::date_lower_bound;
 }
 
 template <typename T>
@@ -85,13 +82,11 @@ void build_dates_dictionary(std::string const& collection_basename,
                 "', but not found.");
         }
         std::string date;
-        while (input) {
-            input >> date;
+        while (input >> date) {
             uint64_t x = parse_and_convert_to_uint64(date);
             numbers.push_back(x);
         }
         input.close();
-
         std::cout << "read " << numbers.size() << " values" << std::endl;
         assert(std::is_sorted(numbers.begin(), numbers.end()));
     }

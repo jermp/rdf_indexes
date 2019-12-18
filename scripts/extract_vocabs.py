@@ -69,22 +69,22 @@ with gzip.open(input_filename, 'rb') as f:
 
         count_freq(subjects, s, extract_subjects)
         count_freq(predicates, p, extract_predicates)
-        count_freq(objects, o, extract_objects)
+        # count_freq(objects, o, extract_objects)
 
 
-        # if extract_objects:
-        #     if parse_date(o):
-        #         # print("date: '" + o + "'")
-        #         objects_dates.add(o)
-        #     else:
-        #         try:
-        #             number_o = int(o)
-        #             # print("integer: '" + o + "'")
-        #             objects_numbers.add(number_o)
-        #         except Exception as e:
-        #             # o should be a string
-        #             # print("string: '" + o + "'")
-        #             count_freq(objects_strings, o, extract_objects)
+        if extract_objects:
+            if parse_date(o):
+                # print("date: '" + o + "'")
+                objects_dates.add(o)
+            else:
+                try:
+                    number_o = int(o)
+                    # print("integer: '" + o + "'")
+                    objects_numbers.add(number_o)
+                except Exception as e:
+                    # o should be a string
+                    # print("string: '" + o + "'")
+                    count_freq(objects_strings, o, extract_objects)
 
         lines += 1
         if lines % 1000000 == 0:
@@ -118,22 +118,22 @@ if extract_predicates:
 if extract_objects:
 
     objects_dict_file = open(dictionary_filename_prefix + ".objects_vocab", 'w')
-    # objects_numbers_dict_file = open(dictionary_filename_prefix + ".objects_numbers_vocab", 'w')
-    # objects_dates_dict_file = open(dictionary_filename_prefix + ".objects_dates_vocab", 'w')
+    objects_numbers_dict_file = open(dictionary_filename_prefix + ".objects_numbers_vocab", 'w')
+    objects_dates_dict_file = open(dictionary_filename_prefix + ".objects_dates_vocab", 'w')
 
-    write_dictionary(objects, objects_dict_file, use_hashes, False)
+    # write_dictionary(objects, objects_dict_file, use_hashes, False)
 
     # custom version that writes numbers and dates first, then strings
-    # for key in sorted(objects_numbers):
-    #     objects_dict_file.write(str(key) + "\n")
-    #     objects_numbers_dict_file.write(str(key) + "\n")
+    for key in sorted(objects_numbers):
+        objects_dict_file.write(str(key) + "\n")
+        objects_numbers_dict_file.write(str(key) + "\n")
 
-    # for key in sorted(objects_dates):
-    #     objects_dict_file.write(key.encode('utf-8') + "\n")
-    #     objects_dates_dict_file.write(key.encode('utf-8') + "\n")
+    for key in sorted(objects_dates):
+        objects_dict_file.write(key.encode('utf-8') + "\n")
+        objects_dates_dict_file.write(key.encode('utf-8') + "\n")
 
-    # write_dictionary(objects_strings, objects_dict_file, use_hashes, False)
+    write_dictionary(objects_strings, objects_dict_file, use_hashes, False)
 
     objects_dict_file.close()
-    # objects_numbers_dict_file.close()
-    # objects_dates_dict_file.close()
+    objects_numbers_dict_file.close()
+    objects_dates_dict_file.close()

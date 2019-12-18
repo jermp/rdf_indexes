@@ -58,7 +58,7 @@ void range_queries(std::string const& index_filename,
 
         for (auto query : queries) {
             triplet t;
-            t.first = query.predicate;
+            t.second = query.predicate;
             uint64_t n = 0;
             {
                 auto query_it = index.select_range(
@@ -103,8 +103,8 @@ int main(int argc, char** argv) {
     int mandatory = 4;
     if (argc < mandatory) {
         std::cout << argv[0]
-                  << "<pef_2tp_index_filename> <dictionary_filename> "
-                     "<query_filename> <num_queries>"
+                  << " <pef_2tp_index_filename> <dictionary_filename>"
+                     " <query_filename> <num_queries>"
                   << std::endl;
         return 1;
     }
