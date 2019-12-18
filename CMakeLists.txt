@@ -43,5 +43,6 @@ include_directories(${RDF_SOURCE_DIR}/include)
 add_subdirectory(external)
 
 add_subdirectory(src)
+add_subdirectory(src/range_queries)
 add_subdirectory(test)
 add_subdirectory(benchmark)

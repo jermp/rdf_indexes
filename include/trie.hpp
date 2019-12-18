@@ -118,6 +118,11 @@ struct trie {
     struct iterator;
     iterator select_all();
     iterator select(triplet const& t);
+
+    template <typename Dictionary>
+    iterator select_range(triplet const& t, uint64_t lower_bound,
+                          uint64_t upper_bound, Dictionary& dictionary);
+
     uint64_t is_member(triplet const& t);
 
     /* specializations */
@@ -162,4 +167,5 @@ struct trie {
 private:
     int m_perm;
 };
+
 }  // namespace rdf

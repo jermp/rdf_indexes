@@ -113,6 +113,39 @@ typename trie<Mapper, Levels>::iterator trie<Mapper, Levels>::select(
 }
 
 template <typename Mapper, typename Levels>
+template <typename Dictionary>
+typename trie<Mapper, Levels>::iterator trie<Mapper, Levels>::select_range(
+    triplet const& t, uint64_t lower_bound, uint64_t upper_bound,
+    Dictionary& dictionary) {
+    assert(t.first != global::wildcard_symbol);
+    assert(t.second == global::wildcard_symbol);
+    assert(t.third == global::wildcard_symbol);
+
+    uint64_t lower_bound_id = dictionary.next_geq(lower_bound);
+    uint64_t upper_bound_id = dictionary.next_geq(upper_bound);
+
+    uint64_t i = t.first;
+    range r = first.pointers[i];
+    uint64_t j = second.nodes.find(r, lower_bound_id);
+    uint64_t k = second.nodes.find(r, upper_bound_id);
+    uint64_t num_triplets =
+        second.pointers[k - 1].end - second.pointers[j].begin;
+
+    typename Levels::second::iterator second_level_iterator(
+        second.nodes.at(r, j), first.pointers.at(i));
+
+    i = j;
+    r = second.pointers[i];
+    j = r.begin;
+
+    typename Levels::third::iterator third_level_iterator(
+        third.nodes.at(r, j), second.pointers.at(i));
+
+    return iterator(t.first, second_level_iterator, third_level_iterator,
+                    num_triplets, mapper);
+}
+
+template <typename Mapper, typename Levels>
 struct trie<Mapper, Levels>::iterator_so {
     iterator_so(uint64_t first,
                 typename Levels::second::iterator const& second_it,

@@ -60,6 +60,28 @@ struct index_2tp {
             }
         }
 
+        template <typename Dictionary>
+        iterator(triplet const& t, index_2tp& index, uint64_t lower_bound,
+                 uint64_t upper_bound, Dictionary& dictionary) {
+            triplet permuted;
+            m_perm = index_2tp::permute(t, permuted);
+            switch (m_perm) {
+                case permutation_type::spo:
+                    // in the case where also the subject is specified: NOT
+                    // SUPPORTED YET...
+                    // m_spo = index.m_spo.select_range(permuted, lower_bound,
+                    // upper_bound);
+                    // break;
+                    assert(false);
+                case permutation_type::pos:
+                    m_pos = index.m_pos.select_range(permuted, lower_bound,
+                                                     upper_bound, dictionary);
+                    break;
+                default:
+                    assert(false);
+            }
+        }
+
 #define ITERATOR_METHOD(RETURN_TYPE, METHOD, FORMALS, ACTUALS) \
     RETURN_TYPE METHOD FORMALS {                               \
         switch (m_perm) {                                      \
@@ -100,6 +122,12 @@ struct index_2tp {
 
     iterator select_all() {
         return iterator(*this);
+    }
+
+    template <typename Dictionary>
+    iterator select_range(triplet const& t, uint64_t lower_bound,
+                          uint64_t upper_bound, Dictionary& dictionary) {
+        return iterator(t, *this, lower_bound, upper_bound, dictionary);
     }
 
     uint64_t is_member(triplet const& t) {
@@ -154,4 +182,5 @@ private:
     SPO m_spo;
     POS m_pos;
 };
+
 }  // namespace rdf

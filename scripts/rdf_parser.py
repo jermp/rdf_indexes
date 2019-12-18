@@ -1,6 +1,8 @@
-def require(char, what, code):
-    if char != what:
-        print code + ": error during parsing"
+def require(got, expected, code):
+    if got != expected:
+        print "error during parsing"
+        print "error code: " + code
+        print "expected '" + expected + "' but got '" + got + "'"
         exit()
 
 def skip_whitespaces(string, pos):
@@ -99,7 +101,9 @@ def parse_nq(string):
         if match_required and string[pos] == '>':
             subject_end = pos
             pos += 1
-            require(string[pos], ' ', "1")
+            # require(string[pos], ' ', "1")
+            while string[pos] == ' ': # skip whitespaces
+                pos += 1
             pos += 1
             match_required = False
             break
@@ -120,7 +124,9 @@ def parse_nq(string):
         if match_required and string[pos] == '>':
             predicate_end = pos
             pos += 1
-            require(string[pos], ' ', "2")
+            # require(string[pos], ' ', "2")
+            while string[pos] == ' ': # skip whitespaces
+                pos += 1
             pos += 1
             match_required = False
             break

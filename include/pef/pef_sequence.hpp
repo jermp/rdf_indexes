@@ -159,6 +159,12 @@ struct pef_sequence {
         return access(pos) - previous_range_upperbound(r);
     }
 
+    uint64_t next_geq(uint64_t lower_bound) {
+        auto pos_value =
+            m_it.next_geq(lower_bound, {0, size()}, num_partitions());
+        return pos_value.second;
+    }
+
     uint64_t find(range const& r, uint64_t id) {
         assert(r.end > r.begin);
         assert(r.end <= size());
@@ -518,10 +524,7 @@ struct pef_sequence {
         visitor.visit(m_upper_bounds);
         visitor.visit(m_data);
         visitor.visit(m_log_partition_size);
-
-        if (m_size) {
-            m_it = begin();
-        }
+        if (m_size) m_it = begin();
     }
 
 private:
@@ -536,12 +539,10 @@ private:
 
     uint64_t previous_range_upperbound(range const& r) {
         uint64_t x = 0;
-        if (LIKELY(r.begin)) {
-            x = access(r.begin - 1);
-        }
+        if (LIKELY(r.begin)) x = access(r.begin - 1);
         return x;
     }
 };
-}  // namespace pef
 
+}  // namespace pef
 }  // namespace rdf

@@ -1,0 +1,2 @@
+add_executable(build_dictionaries build_dictionaries.cpp)
+add_executable(range_queries range_queries.cpp)
