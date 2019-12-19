@@ -8,13 +8,6 @@
 
 using namespace rdf;
 
-uint32_t num_runs(uint32_t runs, uint32_t n) {
-    static const uint32_t N = 10000;
-    uint32_t r = 1;
-    if (n * runs < N) r = N / n;
-    return r;
-}
-
 struct range_query_type {
     uint64_t predicate;
     uint64_t lower_bound, upper_bound;
@@ -28,8 +21,8 @@ int read_dictionary_type(essentials::loader& visitor) {
 
 template <typename Dictionary>
 void range_queries(std::string const& index_filename,
-                   std::string const& query_filename, uint32_t runs,
-                   uint32_t num_queries, Dictionary& dictionary) {
+                   std::string const& query_filename, uint32_t num_queries,
+                   Dictionary& dictionary) {
     pef_2tp index;
     essentials::load(index, index_filename.c_str());
 
@@ -69,21 +62,21 @@ void range_queries(std::string const& index_filename,
                 }
             }
 
-            uint32_t r = num_runs(runs, n);
-
+            static constexpr uint32_t RUNS = 3;
             timer.start();
-            for (uint32_t run = 0; run != r; ++run) {
+            for (uint32_t run = 0; run != RUNS; ++run) {
                 auto query_it = index.select_range(
                     t, query.lower_bound, query.upper_bound, dictionary);
                 while (query_it.has_next()) {
                     auto res = *query_it;
+                    // std::cout << res << "\n";
                     essentials::do_not_optimize_away(res.first);
                     ++query_it;
                 }
             }
             timer.stop();
 
-            double avg_per_query = timer.elapsed() / r;
+            double avg_per_query = timer.elapsed() / RUNS;
             timer.reset();
             elapsed += avg_per_query;
             num_triples += n;
@@ -91,7 +84,7 @@ void range_queries(std::string const& index_filename,
     }
 
     double musecs_per_query = elapsed / num_queries;
-    double nanosecs_per_triplet = elapsed / num_triples * 1000;
+    double nanosecs_per_triplet = (elapsed / num_triples) * 1000;
 
     std::cout << "\tReturned triples: " << num_triples << "\n";
     std::cout << "\tMean per query: " << musecs_per_query << " [musec]\n ";
@@ -114,16 +107,13 @@ int main(int argc, char** argv) {
     std::string query_filename(argv[3]);
     uint32_t num_queries = std::atoi(argv[4]);
 
-    static const uint32_t runs = 5;
-
     essentials::loader visitor(dictionary_filename.c_str());
     int dict_type = read_dictionary_type(visitor);
 
     if (dict_type == dictionary_type::pef_type) {
         pef::pef_sequence dictionary;
         visitor.visit(dictionary);
-        range_queries(index_filename, query_filename, runs, num_queries,
-                      dictionary);
+        range_queries(index_filename, query_filename, num_queries, dictionary);
     } else {
         return 1;
     }

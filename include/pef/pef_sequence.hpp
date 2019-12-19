@@ -160,9 +160,40 @@ struct pef_sequence {
     }
 
     uint64_t next_geq(uint64_t lower_bound) {
+        m_it.move(0);
         auto pos_value =
             m_it.next_geq(lower_bound, {0, size()}, num_partitions());
-        return pos_value.second;
+        return pos_value.first;  // position
+    }
+
+    uint64_t next_geq(range const& r, uint64_t id) {
+        assert(r.end > r.begin);
+        assert(r.end <= size());
+
+        if (r.end - r.begin <= global::linear_scan_threshold) {
+            auto it = at(r, r.begin);
+            for (uint64_t pos = r.begin; pos != r.end; ++pos) {
+                if (it.value() >= id) return pos;
+                it.next();
+            }
+            return r.end - 1;
+        }
+
+        if (m_partitions > 1) {
+            uint64_t partition_begin = r.begin >> m_log_partition_size;
+            m_it.switch_partition(partition_begin);
+        }
+
+        uint64_t prev_upper = previous_range_upperbound(r);
+        id += prev_upper;
+        uint64_t partition_end = r.end >> m_log_partition_size;
+        m_it.move(r.begin);
+        auto pos_value = m_it.next_geq2(id, r, partition_end);
+        // if (pos_value.second != rdf::global::not_found) {
+        return pos_value.first;
+        // }
+
+        // return rdf::global::not_found;
     }
 
     uint64_t find(range const& r, uint64_t id) {
@@ -290,6 +321,36 @@ struct pef_sequence {
             return slow_next_geq(lower_bound, r, partition_end);
         }
 
+        value_type ALWAYSINLINE next_geq2(uint64_t lower_bound, range const& r,
+                                          uint64_t partition_end) {
+            if (LIKELY(lower_bound >= m_cur_base &&
+                       lower_bound <= m_cur_upper_bound)) {
+                auto val = m_partition_enum.next_geq(lower_bound - m_cur_base);
+                m_position = m_cur_begin + val.first;
+
+                if (m_position < r.begin) {
+                    return move(r.begin);
+                }
+
+                if (m_position >= r.end) {
+                    return move(r.end - 1);
+                }
+
+                return value_type(m_position, m_cur_base + val.second);
+            }
+
+            if (lower_bound < m_cur_base) {  // out of bounds form the left
+                return move(r.begin);
+            }
+
+            if (m_cur_partition >
+                partition_end) {  // out of bounds form the right
+                return move(r.end - 1);
+            }
+
+            return slow_next_geq2(lower_bound, r, partition_end);
+        }
+
         uint64_t size() const {
             return m_size;
         }
@@ -396,6 +457,32 @@ struct pef_sequence {
 
             switch_partition(partition_id - 1);
             return next_geq(lower_bound, r, partition_end);
+        }
+
+        value_type NOINLINE slow_next_geq2(uint64_t lower_bound, range const& r,
+                                           uint64_t partition_end) {
+            if (m_partitions == 1) {
+                if (lower_bound < m_cur_base) {
+                    return move(0);
+                } else {
+                    return move(size());
+                }
+            }
+
+            uint64_t partition_id =
+                bsearch(m_upper_bounds, lower_bound, m_cur_partition + 1,
+                        partition_end + 1);
+
+            if (partition_id == 0) {
+                return move(0);
+            }
+
+            if (partition_id == m_upper_bounds->size()) {
+                return move(size());
+            }
+
+            switch_partition(partition_id - 1);
+            return next_geq2(lower_bound, r, partition_end);
         }
 
         void switch_range() {

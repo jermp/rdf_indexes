@@ -117,6 +117,7 @@ template <typename Dictionary>
 typename trie<Mapper, Levels>::iterator trie<Mapper, Levels>::select_range(
     triplet const& t, uint64_t lower_bound, uint64_t upper_bound,
     Dictionary& dictionary) {
+    assert(lower_bound <= upper_bound);
     assert(t.first != global::wildcard_symbol);
     assert(t.second == global::wildcard_symbol);
     assert(t.third == global::wildcard_symbol);
@@ -124,10 +125,15 @@ typename trie<Mapper, Levels>::iterator trie<Mapper, Levels>::select_range(
     uint64_t lower_bound_id = dictionary.next_geq(lower_bound);
     uint64_t upper_bound_id = dictionary.next_geq(upper_bound);
 
+    // std::cout << "next_geq(" << lower_bound << ") = " << lower_bound_id
+    //           << std::endl;
+    // std::cout << "next_geq(" << upper_bound << ") = " << upper_bound_id
+    //           << std::endl;
+
     uint64_t i = t.first;
     range r = first.pointers[i];
-    uint64_t j = second.nodes.find(r, lower_bound_id);
-    uint64_t k = second.nodes.find(r, upper_bound_id);
+    uint64_t j = second.nodes.next_geq(r, lower_bound_id);
+    uint64_t k = second.nodes.next_geq(r, upper_bound_id);
     uint64_t num_triplets =
         second.pointers[k - 1].end - second.pointers[j].begin;
 
