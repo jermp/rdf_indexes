@@ -1,7 +1,7 @@
 Indexes for RDF data
 --------------------
 
-This is the C++ library used for the experiments in the paper [*Compressed Indexes for Fast Search of Semantic Data*](http://pages.di.unipi.it/pibiri/papers/RDF19.pdf) [1], by Raffaele Perego, Giulio Ermanno Pibiri and Rossano Venturini.
+This is the C++ library used for the experiments in the paper [*Compressed Indexes for Fast Search of Semantic Data*](http://pages.di.unipi.it/pibiri/papers/RDF20.pdf) [1], by Raffaele Perego, Giulio Ermanno Pibiri and Rossano Venturini.
 
 This guide is meant to provide a brief overview of the library and to illustrate its functionalities through some examples.
 ##### Table of contents
@@ -275,6 +275,6 @@ Authors <a name="authors"></a>
 
 References <a name="references"></a>
 -------
-* [1] Raffaele Perego, Giulio Ermanno Pibiri and Rossano Venturini. *Compressed Indexes for Fast Search of Semantic Data*. 2019. arXiv preprint. https://arxiv.org/abs/1904.07619
+* [1] Raffaele Perego, Giulio Ermanno Pibiri and Rossano Venturini. *Compressed Indexes for Fast Search of Semantic Data*. 2020. IEEE Transactions on Knowledge and Data Engineering (TKDE). 12 pages.
 * [2] M. A. Martínez-Prieto, M. A. Gallego, and J. D. Fernández. *Exchange and consumption of huge rdf data* in Extended Semantic
 Web Conference. Springer, 2012, pp. 437–452.
