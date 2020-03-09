@@ -23,7 +23,7 @@ def build_vocab(dictionary, filename):
             dictionary[parsed] = id
             id += 1
 
-    print "assigned ids from 0 to " + str(id - 1)
+    print("assigned ids from 0 to " + str(id - 1))
 
 # assume there are:
 # 'input_filename'.subjects_vocab
@@ -44,20 +44,19 @@ output_file = open(prefix_name + ".mapped.unsorted", 'w')
 with gzip.open(input_filename, 'rb') as f:
     for line in f:
 
-        # (s, p, o) = parse_nt(line)
-        (s, p, o) = parse_nq(line)
+        # (s, p, o) = parse_nt(line.decode("utf-8"))
+        (s, p, o) = parse_nq(line.decode("utf-8"))
         ms = 0
         ps = 0
         os = 0
 
+        hs = s
+        hp = p
+        ho = o
         if use_hashes:
             hs = numpy.uint64(mmh3.hash64(s, signed=False)[0])
             hp = numpy.uint64(mmh3.hash64(p, signed=False)[0])
             ho = numpy.uint64(mmh3.hash64(o, signed=False)[0])
-        else:
-            hs = s.encode('utf-8')
-            hp = p.encode('utf-8')
-            ho = o.encode('utf-8')
 
         try:
             ms = subjects[hs]
@@ -65,28 +64,27 @@ with gzip.open(input_filename, 'rb') as f:
                 ps = predicates[hp]
                 try:
                     os = objects[ho]
-
                     mapped = str(ms) + " " + str(ps) + " " + str(os)
                     output_file.write(mapped + "\n")
 
                 except KeyError:
-                    print "'" + o + "' not found in objects_vocab"
-                    print line
-                    print s, p, o
+                    print("'" + o + "' not found in objects_vocab")
+                    print(line)
+                    print(s, p, o)
 
             except KeyError:
-                print "'" + p + "' not found in predicates_vocab"
-                print line
-                print s, p, o
+                print("'" + p + "' not found in predicates_vocab")
+                print(line)
+                print(s, p, o)
 
         except KeyError:
-            print "'" + s + "' not found in subjects_vocab"
-            print line
-            print s, p, o
+            print("'" + s + "' not found in subjects_vocab")
+            print(line)
+            print(s, p, o)
 
         lines += 1
         if lines % 1000000 == 0:
-            print "processed " + str(lines) + " lines"
+            print("processed " + str(lines) + " lines")
 
-print "processed " + str(lines) + " lines"
+print("processed " + str(lines) + " lines")
 output_file.close()

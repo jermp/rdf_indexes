@@ -94,7 +94,7 @@ RDF dataset in standard N-Triples format.
 Preparing the data for indexing <a name="preparing"></a>
 -------------------------------
 
-The folder `scripts` contains all the python scripts needed to prepare the datasets for indexing.
+The folder `scripts` contains all the python3 scripts needed to prepare the datasets for indexing.
 
 Assume we have an RDF dataset in standard N-Triples format,
 additionally compressed via gzip.
@@ -107,32 +107,32 @@ You can also visit [http://wordnet-rdf.princeton.edu](http://wordnet-rdf.princet
 To prepare the data, it is sufficient to follow the following steps
 from within the `scripts` folder.
 
-**NOTE** - The scripts require the python module `mmh3` that can be easily
-installed with `pip install mmh3`.
+**NOTE** - The scripts require the modules `mmh3` and `numpy` that can be easily
+installed with `pip3 install mmh3 numpy`.
 
 1. Extract the vocabularies.
 
-		python extract_vocabs.py ../test_data/wordnet31.gz -S -P -O
+		python3 extract_vocabs.py ../test_data/wordnet31.gz -S -P -O
 
 	This script will produce the following files: `wordnet31.subjects_vocab`, `wordnet31.predicates_vocab` and `wordnet31.objects_vocab`.
 
 2. Map the URIs to integer triples.
 
-		python map_dataset.py ../test_data/wordnet31.gz
+		python3 map_dataset.py ../test_data/wordnet31.gz
 
 	This script will map the dataset to integer triples,
 	producing the file `wordnet31.mapped.unsorted`.
 
 3. Sort the file `wordnet31.mapped.unsorted` materializing the needed permutations.
 
-		python sort.py ../test_data/wordnet31.mapped.unsorted wordnet31
+		python3 sort.py ../test_data/wordnet31.mapped.unsorted wordnet31
 
 	This script will produce the four permutations, one per file:
 	`wordnet31.mapped.sorted.spo`, `wordnet31.mapped.sorted.pos`, `wordnet31.mapped.sorted.osp` and `wordnet31.mapped.sorted.ops`.
 
 4. Build the file with the statistics.
 
-		python build_stats.py wordnet31.mapped.sorted
+		python3 build_stats.py wordnet31.mapped.sorted
 
 	This script will create the file `wordnet31.mapped.sorted.stats`.
 

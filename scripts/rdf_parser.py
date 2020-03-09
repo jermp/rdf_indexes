@@ -1,6 +1,6 @@
 def require(char, what, code):
     if char != what:
-        print code + ": error during parsing"
+        print(code + ": error during parsing")
         exit()
 
 def skip_whitespaces(string, pos):
@@ -51,8 +51,8 @@ def parse_nt(string):
                 pos += 1
                 EOS = '\n' # HDT takes everything left
             else:
-                print string
-                print "2: error during parsing"
+                print(string)
+                print("2: error during parsing")
                 exit()
 
             break
