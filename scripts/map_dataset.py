@@ -1,5 +1,5 @@
 import sys, gzip, mmh3
-from rdf_parser import parse_nt
+# from rdf_parser import parse_nt
 from rdf_parser import parse_nq
 import numpy
 
