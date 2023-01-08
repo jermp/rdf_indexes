@@ -1,5 +1,3 @@
-[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/jermp/rdf_indexes.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/jermp/rdf_indexes/context:cpp)
-
 Indexes for RDF data
 --------------------
 
